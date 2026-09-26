@@ -90,8 +90,11 @@ const loginUser = async (req, res, next) => {
 // @route   POST /api/auth/logout
 // @access  Private
 const logoutUser = async (req, res) => {
+  const isProduction = process.env.NODE_ENV === 'production';
   res.cookie('token', '', {
     httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
     expires: new Date(0),
   });
   return success(res, 200, 'Logged out successfully');
